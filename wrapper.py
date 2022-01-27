@@ -6,7 +6,7 @@ from json_to_graphviz_svg import convert_json_to_graphviz_svg
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods = ['POST'])
 def default():
     body = request.json
     svg = convert_json_to_graphviz_svg(body)
