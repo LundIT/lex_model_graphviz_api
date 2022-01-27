@@ -1,8 +1,7 @@
 FROM python:3.9
 
 WORKDIR /app
-COPY main.py .
-COPY requirements.txt .
+COPY . .
 
 RUN apt-get update && apt-get install -y graphviz && pip install -r requirements.txt
 
