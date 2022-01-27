@@ -20,7 +20,7 @@ jobs:
         export_default_credentials: true
 
     - name: Run docker build
-      run: docker build --no-cache -t lex_model_graphviz_api:latest -f ./build/Dockerfile .
+      run: docker build --no-cache -t lex_model_graphviz_api:latest -f  .
 
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v0
