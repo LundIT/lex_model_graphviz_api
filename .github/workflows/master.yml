@@ -1,0 +1,32 @@
+
+name: build-and-push-master-to-cloud-run
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  buildpush:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: master
+    - uses: google-github-actions/setup-gcloud@master
+      with:
+        service_account_email: ${{ secrets.GCP_EMAIL }}
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        export_default_credentials: true
+
+    - name: Run docker build
+      run: docker build --no-cache -t lex_model_graphviz_api:latest -f ./build/Dockerfile .
+
+    - name: Deploy to Cloud Run
+      uses: google-github-actions/deploy-cloudrun@v0
+      with:
+        service: lex-model-graphviz-api
+        image: lex_model_graphviz_api:latest
+        region: europe-west3
+
+
