@@ -26,6 +26,9 @@ jobs:
     - name: Run docker build
       run: docker build --no-cache -t europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:latest .
 
+    - name: Run docker push
+      run: docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:latest
+
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v0
       with:
