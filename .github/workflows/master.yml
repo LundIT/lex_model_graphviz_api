@@ -1,5 +1,5 @@
 
-name: build-and-push-master-to-cloud-run
+name: build-and-push-dev-to-cloud-run
 
 on:
   push:
@@ -24,16 +24,16 @@ jobs:
         gcloud auth configure-docker europe-docker.pkg.dev
 
     - name: Run docker build
-      run: docker build --no-cache -t europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:latest .
+      run: docker build --no-cache -t europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:dev .
 
     - name: Run docker push
-      run: docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:latest
+      run: docker push europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:dev
 
     - name: Deploy to Cloud Run
       uses: google-github-actions/deploy-cloudrun@v0
       with:
         service: lex-model-graphviz-api
-        image: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:latest
+        image: europe-docker.pkg.dev/superb-blend-305320/lex-prod-registry/lex_model_graphviz_api:dev
         region: europe-west3
 
 
