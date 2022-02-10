@@ -5,14 +5,16 @@ import subprocess
 
 
 
-def get_import_for_foreign_keys(json, class_name):
+def get_import_for_foreign_keys(json, columns):
     imports = []
-    columns = json['models'][class_name]['columns']
+    #columns = json['models'][class_name]['columns']
     for line in columns:
         if line['data_type'] == 'ForeignKey':
             to_class = line['to']
-            file_path_of_to_class = json['models'][to_class]['settings']['file_path']
-            imports.append(f"from generic_app.submodels.{json['settings']['project_name']}.{file_path_of_to_class}.{to_class} import {to_class}")
+            for model in json['models']:
+                if model['class']['name'] == to_class:
+                    file_path_of_to_class = model['class']['settings']['file_path']
+                    imports.append(f"from generic_app.submodels.{json['settings']['project_name']}.{file_path_of_to_class}.{to_class} import {to_class}")
 
     return imports
 
@@ -29,7 +31,7 @@ def class_to_lex_file(json, class_name, columns, settings, project_settings):
 
     lines = []
     lines.append("from generic_app.models import *\n")
-    lines += get_import_for_foreign_keys(json, class_name)
+    lines += get_import_for_foreign_keys(json, columns)
     lines.append(f"class {class_name}("
                  f"{'DependenyAnalsisMixin, ' if is_dependency_analysis_mixin else ''}"
                  f"{'UploadModelMixin, ' if is_upload_model else ''}"
@@ -83,10 +85,11 @@ def convert_json_to_lex_files(json):
 
     project_name = json['settings']['project_name']
     os.chdir(project_name)
-    for class_name in json['models'].keys():
-        file_string = class_to_lex_file(json=json, class_name=class_name, columns=json['models'][class_name]['columns'], settings=json['models'][class_name]['settings'], project_settings=json['settings'])
+    for model in json['models']:
+        file_string = class_to_lex_file(json=json, class_name=model['class']['name'], columns=model['class']['columns'], settings=model['class']['settings'], project_settings=json['settings'])
+        class_name = model['class']['name']
         print(f"New File String for {class_name}")
-        file_path = json['models'][class_name]['settings']['file_path'].replace('.', '/')
+        file_path = model['class']['settings']['file_path'].replace('.', '/')
 
         os.makedirs(f"{file_path}",exist_ok=True)
 

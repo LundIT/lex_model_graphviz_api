@@ -21,11 +21,13 @@ def body_to_html_table(class_name, body):
 def convert_json_to_graphviz_svg(json:dict):
     graph = Digraph(comment=f"Class Visualization", engine='dot')
     graph.attr('graph', splines='ortho')
-    for class_name in json['models'].keys():
-        graph.node(class_name, label=body_to_html_table(class_name, json['models'][class_name]['columns']), style='filled', fillcolor='snow')
-        foreign_keys = [x['to'] for x in json['models'][class_name]['columns'] if x['data_type']=='ForeignKey']
+    for model in json['models']:
+        graph.node(model['class']['name'], label=body_to_html_table(model['class']['name'], model['class']['columns']), style='filled', fillcolor='snow')
+        foreign_keys = [x['to'] for x in model['class']['columns'] if x['data_type']=='ForeignKey']
         for fk in foreign_keys:
-            graph.edge(class_name, fk)
+            for model_name in json['models']:
+                if model_name['class']['name'] == fk:
+                    graph.edge(model['class']['name'], model_name['class']['name'])
 
     graph.format = 'svg'
     svg_string = graph.pipe(encoding='utf-8')
