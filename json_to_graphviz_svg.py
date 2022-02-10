@@ -4,7 +4,7 @@ from example_jsons import *
 # this function takes a set of member_variables (body) and creates a HTML-Like label for graphviz
 def body_to_html_table(class_name, body):
     table = f"<" \
-            f'<TABLE HREF="www.google.com">' \
+            f'<TABLE>' \
             f"<TR><TD>{class_name}</TD></TR>" \
             f"<TR><TD>" \
             f"<TABLE>"

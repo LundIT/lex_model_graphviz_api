@@ -13,14 +13,18 @@ CORS(app)
 def convert_json_to_graphviz():
     body = request.json
     svg = convert_json_to_graphviz_svg(body)
-    return svg
+    response = make_response(jsonify(svg))
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route("/convert_json_to_lex_repo/", methods=['POST'])
 def convert_json_to_lex_repo():
     body = request.json
     convert_json_to_lex_files(body)
     data = {'message': 'Created', 'code': 'SUCCESS'}
-    return make_response(jsonify(data), 201)
+    response = make_response(jsonify(data))
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 if __name__ == "__main__":
