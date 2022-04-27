@@ -135,7 +135,7 @@ def convert_json_to_lex_files(json):
 
         with open(f"{file_path}/{class_name}.json", "w") as model_file:
             model_file.write(file_string)
-        print(f"Adding {file_path}/{class_name}.json to Git exited with", git('add', f'{file_path}/{class_name}.py'))
+        print(f"Adding {file_path}/{class_name}.json to Git exited with", git('add', f'{file_path}/{class_name}.json'))
 
     print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
     print('Pushing to git exited with', git('push'))
