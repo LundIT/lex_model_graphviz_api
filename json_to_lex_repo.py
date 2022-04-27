@@ -75,18 +75,42 @@ def class_to_lex_file(json, class_name, columns, settings, project_settings):
 
     return "\n".join(lines)
 
+
+def create_test_class():
+    lines = []
+    lines.append("from ProcessAdminRestApi.tests.ProcessAdminTestCase import ProcessAdminTestCase\n")
+    lines.append("class upload_test(ProcessAdminTestCase):\n")
+    lines.append(f"{indent()}def test(self):")
+
+    lines.append(f"{indent()}{indent()}# Implement your checks here")
+    lines.append(f"{indent()}{indent()}breakpoint()")
+    lines.append(f"{indent()}{indent()}pass")
+
+    file_string = "\n".join(lines)
+    file_path = ('Tests')
+    class_name = 'upload_test'
+
+    os.makedirs(f"{file_path}", exist_ok=True)
+
+    with open(f"{file_path}/{class_name}.py", "w") as model_file:
+        model_file.write(file_string)
+    print(f"Adding {file_path}/{class_name}.py to Git exited with", git('add', f'{file_path}/{class_name}.py'))
+
+
+
 # the git function enables use to run specific git processes in the console.
 def git(*args):
     return subprocess.check_call(['git'] + list(args))
 
 # This function clonse a given repository, creates the directories and files, adds and commits the files to git and pushes the repository
 def convert_json_to_lex_files(json):
-    print("Cloning Git Repository exited with", git('clone', json['settings']['github_repository']))
-
-    project_name = json['settings']['project_name']
+    json_create_models = json[0]
+    print("Cloning Git Repository exited with", git('clone', json_create_models['settings']['github_repository']))
+    project_name = json_create_models['settings']['project_name']
     os.chdir(project_name)
-    for model in json['models']:
-        file_string = class_to_lex_file(json=json, class_name=model['class']['name'], columns=model['class']['columns'], settings=model['class']['settings'], project_settings=json['settings'])
+
+    for model in json_create_models['models']:
+        file_string = class_to_lex_file(json=json_create_models, class_name=model['class']['name'], columns=model['class']['columns'], settings=model['class']['settings'], project_settings=json_create_models['settings'])
         class_name = model['class']['name']
         print(f"New File String for {class_name}")
         file_path = model['class']['settings']['file_path'].replace('.', '/')
@@ -97,9 +121,24 @@ def convert_json_to_lex_files(json):
             model_file.write(file_string)
         print(f"Adding {file_path}/{class_name}.py to Git exited with", git('add', f'{file_path}/{class_name}.py'))
 
+
+    if json[1].__len__() != 0:
+        #Tests existieren
+        json_create_tests = json[1]
+        create_test_class()
+
+        file_string = str(json_create_tests)
+        file_path = ('Tests')
+        class_name = 'test_data'
+
+        os.makedirs(f"{file_path}", exist_ok=True)
+
+        with open(f"{file_path}/{class_name}.json", "w") as model_file:
+            model_file.write(file_string)
+        print(f"Adding {file_path}/{class_name}.json to Git exited with", git('add', f'{file_path}/{class_name}.py'))
+
     print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
     print('Pushing to git exited with', git('push'))
 
 if __name__ == '__main__':
-
     convert_json_to_lex_files(input_json_1)
