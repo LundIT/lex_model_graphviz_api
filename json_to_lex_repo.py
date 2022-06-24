@@ -138,12 +138,22 @@ def convert_json_to_lex_files(json):
     print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
     print('Pushing to git exited with', git('push'))
 
+#following functions are not tested yet
+def gh(*args):
+    return subprocess.check_call(['gh'] + list(args))
+
+def gh_auth(pat_token):
+    print("Auth Gh exited with", gh('auth login --with-token', pat_token))
+    pass
 
 def new_convert_json_to_lex_files(json):
-    #TODO auth with pat and username
-
     json_create_models = json[0]
     project_name = json_create_models['settings']['project_name']
+    
+    #TODO auth with pat
+    #TODO add a pat key to sent json
+    #pat_token = json_create_models['settings']['pat']
+    #gh_auth(pat_token)
 
     git_clone_repo(json_create_models['settings']['github_repository'])
 
