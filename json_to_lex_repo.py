@@ -142,14 +142,13 @@ def convert_json_to_lex_files(json):
 #TODO injections should be checked
 def new_convert_json_to_lex_files(json):
     if json[0].__len__() != 0:
-        # creating all the constants here
         json_create_models = json[0]
-        #auth and git variables
-        git_token = json_create_models['settings']['pat']
+        #creating all the constants here
+        git_token = json_create_models['settings']['git_token']
         git_username = json_create_models['settings']['username']
         project_name = json_create_models['settings']['project_name']
         github_repository = json_create_models['settings']['github_repository']
-   
+
         # clone repo 
         git_clone_repo(git_username, git_token, github_repository)
 
@@ -167,10 +166,8 @@ def new_convert_json_to_lex_files(json):
     #git commit and push the added files
     git_commit_push()
     
-
 def git_clone_repo(username, token, github_repository):
     url = "https://"+username+":"+token+"@github.com/"+github_repository+".git"
-    print(url)
     print("Cloning Git Repository exited with", git('clone', url))
 
 def add_dir_n_files(json_create_models):
@@ -202,7 +199,6 @@ def add_tests(json_create_tests):
 def git_commit_push():
     print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
     print('Pushing to git exited with', git('push'))
-
 
 if __name__ == '__main__':
     convert_json_to_lex_files(input_json_1)
