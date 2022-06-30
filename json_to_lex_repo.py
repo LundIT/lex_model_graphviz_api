@@ -139,36 +139,39 @@ def convert_json_to_lex_files(json):
     print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
     print('Pushing to git exited with', git('push'))
 
-#following functions are not tested yet
-def gh(*args):
-    return subprocess.check_call(['gh'] + list(args))
-
-def gh_auth(pat_token):
-    print("Auth Gh exited with", gh('auth login --with-token', pat_token))
-    pass
-
+#TODO injections should be checked
 def new_convert_json_to_lex_files(json):
-    json_create_models = json[0]
-    project_name = json_create_models['settings']['project_name']
-    
-    #TODO auth with pat
-    #TODO add a pat key to sent json
-    #pat_token = json_create_models['settings']['pat']
-    #gh_auth(pat_token)
+    if json[0].__len__() != 0:
+        # creating all the constants here
+        json_create_models = json[0]
+        #auth and git variables
+        git_token = json_create_models['settings']['pat']
+        git_username = json_create_models['settings']['username']
+        project_name = json_create_models['settings']['project_name']
+        github_repository = json_create_models['settings']['github_repository']
+   
+        # clone repo 
+        git_clone_repo(git_username, git_token, github_repository)
 
-    git_clone_repo(json_create_models['settings']['github_repository'])
-
+    #change directory to newly cloned repo
     os.chdir(project_name)
 
+    #adding directories and files into the cloned repo
     add_dir_n_files(json_create_models)
 
+    #tests
     if json[1].__len__() != 0:
-        add_tests(json[1])
+        json_create_tests = json[1]
+        add_tests(json_create_tests)
 
+    #git commit and push the added files
     git_commit_push()
+    
 
-def git_clone_repo(github_repository):
-    print("Cloning Git Repository exited with", git('clone', github_repository))
+def git_clone_repo(username, token, github_repository):
+    url = "https://"+username+":"+token+"@github.com/"+github_repository+".git"
+    print(url)
+    print("Cloning Git Repository exited with", git('clone', url))
 
 def add_dir_n_files(json_create_models):
     for model in json_create_models['models']:
