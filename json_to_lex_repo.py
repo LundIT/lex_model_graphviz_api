@@ -2,9 +2,6 @@ import os
 import subprocess
 
 # This part implements the section in the beginning, where we have to import the foreign keys
-
-
-
 def get_import_for_foreign_keys(json, columns):
     imports = []
     #columns = json['models'][class_name]['columns']
@@ -40,11 +37,11 @@ def class_to_lex_file(json, class_name, columns, settings, project_settings):
     class_lines = []
     class_lines.append(indent())
     for line in columns:
-
         if line['data_type'] == 'ForeignKey':
             class_lines.append(f"{line['column_name']} = {line['data_type']}(to={line['to']}, on_delete={line['on_delete']})")
         else:
             class_lines.append(f"{line['column_name']} = {line['data_type']}(default={line['default_value']})")
+
     class_lines.append("")
     if is_dependency_analysis_mixin:
         class_lines.append("def directly_dependent_entries(self):")
@@ -102,11 +99,12 @@ def create_test_class():
 def git(*args):
     return subprocess.check_call(['git'] + list(args))
 
-# This function clonse a given repository, creates the directories and files, adds and commits the files to git and pushes the repository
+# This function clones a given repository, creates the directories and files, adds and commits the files to git and pushes the repository
 def convert_json_to_lex_files(json):
-    json_create_models = json[0]
+    json_create_models = json
     print("Cloning Git Repository exited with", git('clone', json_create_models['settings']['github_repository']))
     project_name = json_create_models['settings']['project_name']
+    
     os.chdir(project_name)
 
     for model in json_create_models['models']:
@@ -137,6 +135,67 @@ def convert_json_to_lex_files(json):
             model_file.write(file_string)
         print(f"Adding {file_path}/{class_name}.json to Git exited with", git('add', f'{file_path}/{class_name}.json'))
 
+    print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
+    print('Pushing to git exited with', git('push'))
+
+#TODO injections should be checked
+def new_convert_json_to_lex_files(json):
+    if json[0].__len__() != 0:
+        json_create_models = json[0]
+        #creating all the constants here
+        git_token = json_create_models['settings']['git_token']
+        git_username = json_create_models['settings']['username']
+        project_name = json_create_models['settings']['project_name']
+        github_repository = json_create_models['settings']['github_repository']
+
+        # clone repo 
+        git_clone_repo(git_username, git_token, github_repository)
+
+    #change directory to newly cloned repo
+    os.chdir(project_name)
+
+    #adding directories and files into the cloned repo
+    add_dir_n_files(json_create_models)
+
+    #tests
+    if json[1].__len__() != 0:
+        json_create_tests = json[1]
+        add_tests(json_create_tests)
+
+    #git commit and push the added files
+    git_commit_push()
+    
+def git_clone_repo(username, token, github_repository):
+    url = "https://"+username+":"+token+"@github.com/"+github_repository+".git"
+    print("Cloning Git Repository exited with", git('clone', url))
+
+def add_dir_n_files(json_create_models):
+    for model in json_create_models['models']:
+        file_string = class_to_lex_file(json=json_create_models, class_name=model['class']['name'], columns=model['class']['columns'], settings=model['class']['settings'], project_settings=json_create_models['settings'])
+        class_name = model['class']['name']
+        print(f"New File String for {class_name}")
+        file_path = model['class']['settings']['file_path'].replace('.', '/')
+
+        os.makedirs(f"{file_path}",exist_ok=True)
+
+        with open(f"{file_path}/{class_name}.py", "w") as model_file:
+            model_file.write(file_string)
+        print(f"Adding {file_path}/{class_name}.py to Git exited with", git('add', f'{file_path}/{class_name}.py'))
+    
+def add_tests(json_create_tests):
+    create_test_class()
+
+    file_string = str(json_create_tests)
+    file_path = ('Tests')
+    class_name = 'test_data'
+
+    os.makedirs(f"{file_path}", exist_ok=True)
+
+    with open(f"{file_path}/{class_name}.json", "w") as model_file:
+        model_file.write(file_string)
+    print(f"Adding {file_path}/{class_name}.json to Git exited with", git('add', f'{file_path}/{class_name}.json'))
+
+def git_commit_push():
     print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
     print('Pushing to git exited with', git('push'))
 
