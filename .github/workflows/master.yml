@@ -3,7 +3,7 @@ name: build-and-push-master-to-cloud-run
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   buildpush:
@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: master
+        ref: main
     - uses: google-github-actions/setup-gcloud@main
       with:
         service_account_email: ${{ secrets.GCP_EMAIL }}
