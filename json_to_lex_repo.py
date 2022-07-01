@@ -101,7 +101,6 @@ def git(*args):
 
 # This function clones a given repository, creates the directories and files, adds and commits the files to git and pushes the repository
 def convert_json_to_lex_files(json):
-    print(json)
     json_create_models = json
     print("Cloning Git Repository exited with", git('clone', json_create_models['settings']['github_repository']))
     project_name = json_create_models['settings']['project_name']
