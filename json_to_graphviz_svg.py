@@ -28,7 +28,6 @@ def convert_json_to_graphviz_svg(json:dict):
             for model_name in json['models']:
                 if model_name['class']['name'] == fk:
                     graph.edge(model['class']['name'], model_name['class']['name'])
-
     graph.format = 'svg'
     svg_string = graph.pipe(encoding='utf-8')
     return svg_string
