@@ -197,6 +197,7 @@ def add_tests(json_create_tests):
 
 def git_commit_push():
     print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
+    
     print('Pushing to git exited with', git('push'))
 
 if __name__ == '__main__':
