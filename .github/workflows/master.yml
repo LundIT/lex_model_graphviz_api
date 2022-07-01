@@ -3,7 +3,7 @@ name: build-and-push-master-to-cloud-run
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   buildpush:

@@ -119,7 +119,6 @@ def convert_json_to_lex_files(json):
             model_file.write(file_string)
         print(f"Adding {file_path}/{class_name}.py to Git exited with", git('add', f'{file_path}/{class_name}.py'))
 
-
     if json[1].__len__() != 0:
         #Tests existieren
         json_create_tests = json[1]
