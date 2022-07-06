@@ -4,7 +4,7 @@ from flask import Flask, request, make_response, jsonify
 from flask_cors import CORS
 from json_to_graphviz_svg import convert_json_to_graphviz_svg
 from json_to_lex_repo import convert_json_to_lex_files
-from json_to_lex_repo import new_convert_json_to_lex_files
+#from json_to_lex_repo import new_convert_json_to_lex_files
 
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ def convert_json_to_lex_repo():
 @app.route("/new_convert_json_to_lex_repo/", methods=['POST'])
 def new_convert_json_to_lex_repo():
     body = request.json
-    new_convert_json_to_lex_files(body)
+    #new_convert_json_to_lex_files(body)
     data = {'message': 'Created', 'code': 'SUCCESS'}
     response = make_response(jsonify(data))
     response.headers.add('Access-Control-Allow-Origin', '*')

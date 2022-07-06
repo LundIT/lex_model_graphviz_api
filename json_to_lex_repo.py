@@ -163,6 +163,8 @@ def convert_json_to_lex_files(json):
 
     #git commit and push the added files
     git_commit_push()
+
+    #delete the cloned directory
     
 def git_clone_repo(username, token, github_repository):
     url = "https://"+username+":"+token+"@github.com/"+github_repository+".git"
