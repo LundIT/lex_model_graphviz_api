@@ -146,10 +146,10 @@ def convert_json_to_lex_files(json):
         git_username = json_create_models['settings']['username']
         project_name = json_create_models['settings']['project_name']
         github_repository = json_create_models['settings']['github_repository']
-
+        git_email = "ensarben@gmail.com"
         # clone repo 
         git_clone_repo(git_username, git_token, github_repository)
-
+    git_config(git_username, git_email)
     print(os.getcwd())
     #change directory to newly cloned repo
     os.chdir(project_name)
@@ -166,6 +166,10 @@ def convert_json_to_lex_files(json):
     git_commit_push()
 
     #delete the cloned directory
+
+def git_config(username, email):
+    print("Config user email", git('config user.email', email))
+    print("Config user name", git('config user.name', username))
     
 def git_clone_repo(username, token, github_repository):
     url = "https://"+username+":"+token+"@github.com/"+github_repository+".git"
