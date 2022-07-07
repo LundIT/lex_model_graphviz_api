@@ -161,7 +161,6 @@ def convert_json_to_lex_files(json):
     print(os.getcwd())
     #git commit and push the added files
     
-    git_config('ensarkaya', 'ensarben@gmail.com')
     git_commit_push()
 
     #delete the cloned directory
