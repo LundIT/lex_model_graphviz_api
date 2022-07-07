@@ -148,13 +148,11 @@ def convert_json_to_lex_files(json):
         github_repository = json_create_models['settings']['github_repository']
         # clone repo 
         git_clone_repo(git_username, git_token, github_repository)
-
-    print(os.getcwd())
-    #change directory to newly cloned repo
-    os.chdir(project_name)
-    print(os.getcwd())
-    #adding directories and files into the cloned repo
-    add_dir_n_files(json_create_models)
+        #change directory to newly cloned repo
+        os.chdir(project_name)
+    
+        #adding directories and files into the cloned repo
+        add_dir_n_files(json_create_models)
 
     #tests
     if json[1].__len__() != 0:
@@ -162,7 +160,8 @@ def convert_json_to_lex_files(json):
         add_tests(json_create_tests)
     print(os.getcwd())
     #git commit and push the added files
-    git_config(git_username, git_email)
+    
+    git_config('ensarkaya', 'ensarben@gmail.com')
     git_commit_push()
 
     #delete the cloned directory
