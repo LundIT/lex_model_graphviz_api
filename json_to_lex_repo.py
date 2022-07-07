@@ -150,9 +150,10 @@ def convert_json_to_lex_files(json):
         # clone repo 
         git_clone_repo(git_username, git_token, github_repository)
 
+    print(os.getcwd())
     #change directory to newly cloned repo
     os.chdir(project_name)
-
+    print(os.getcwd())
     #adding directories and files into the cloned repo
     add_dir_n_files(json_create_models)
 
@@ -160,7 +161,7 @@ def convert_json_to_lex_files(json):
     if json[1].__len__() != 0:
         json_create_tests = json[1]
         add_tests(json_create_tests)
-
+    print(os.getcwd())
     #git commit and push the added files
     git_commit_push()
 
@@ -197,7 +198,7 @@ def add_tests(json_create_tests):
     print(f"Adding {file_path}/{class_name}.json to Git exited with", git('add', f'{file_path}/{class_name}.json'))
 
 def git_commit_push():
-    print('Commiting to Git exited with', git('commit', '-m', 'Initial Commit'))
+    print('Commiting to Git exited with', git('commit', '-m', 'Adding Models and Tests'))
     
     print('Pushing to git exited with', git('push'))
 
