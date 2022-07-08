@@ -98,7 +98,7 @@ def create_test_class():
 # the git function enables use to run specific git processes in the console.
 def git(*args):
     return subprocess.check_call(['git'] + list(args))
-
+#this is the older version of the convert_json_to_lex_files() below
 # This function clones a given repository, creates the directories and files, adds and commits the files to git and pushes the repository
 def convert_json_to_lex_files1(json):
     json_create_models = json
@@ -139,6 +139,7 @@ def convert_json_to_lex_files1(json):
 
 #TODO injections should be checked
 def convert_json_to_lex_files(json):
+    git_action_bot = 'action@github.com'
     if json[0].__len__() != 0:
         json_create_models = json[0]
         #creating all the constants here
@@ -154,21 +155,21 @@ def convert_json_to_lex_files(json):
         #adding directories and files into the cloned repo
         add_dir_n_files(json_create_models)
 
+        #adding git config
+        git_config(git_username, git_action_bot)
+
     #tests
     if json[1].__len__() != 0:
         json_create_tests = json[1]
         add_tests(json_create_tests)
-    print(os.getcwd())
+
     #git commit and push the added files
-    
-    git_commit_push()
+    git_commit_push()  
 
-    #delete the cloned directory
 def git_config(username, email):
-    print("Config user name", git('config --global user.name', username))
-    print("Config user email", git('config --global user.email', email))
+    print("Config user name", git('config', 'user.name', username))
+    print("Config user email", git('config', 'user.email', email))
 
-    
 def git_clone_repo(username, token, github_repository):
     url = "https://"+username+":"+token+"@github.com/"+github_repository+".git"
     print("Cloning Git Repository exited with", git('clone', url))
