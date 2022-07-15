@@ -6,6 +6,16 @@ from json_to_graphviz_svg import convert_json_to_graphviz_svg
 from json_to_lex_repo import convert_json_to_lex_files
 #from json_to_lex_repo import new_convert_json_to_lex_files
 
+import sentry_sdk
+sentry_sdk.init(
+    dsn="https://4abd3e27fde7403595de41b8d7a626d6@o1318244.ingest.sentry.io/6575867",
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
+
 
 app = Flask(__name__)
 CORS(app)
