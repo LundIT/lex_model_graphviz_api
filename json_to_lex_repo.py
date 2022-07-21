@@ -40,7 +40,10 @@ def class_to_lex_file(json, class_name, columns, settings, project_settings):
         if line['data_type'] == 'ForeignKey':
             class_lines.append(f"{line['column_name']} = {line['data_type']}(to={line['to']}, on_delete={line['on_delete']})")
         else:
-            class_lines.append(f"{line['column_name']} = {line['data_type']}(default={line['default_value']})")
+            if not line['default_value']:
+                class_lines.append(f"{line['column_name']} = {line['data_type']}")
+            else:
+                class_lines.append(f"{line['column_name']} = {line['data_type']}(default={line['default_value']})")
 
     class_lines.append("")
     if is_dependency_analysis_mixin:
