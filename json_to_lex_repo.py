@@ -39,11 +39,19 @@ def class_to_lex_file(json, class_name, columns, settings, project_settings):
     for line in columns:
         if line['data_type'] == 'ForeignKey':
             class_lines.append(f"{line['column_name']} = {line['data_type']}(to={line['to']}, on_delete={line['on_delete']})")
+        elif line['data_type'] == 'TextField':
+            class_lines.append(f"{line['column_name']} = {line['data_type']}(\"default={line['default_value']}\")")
+        elif line['data_type'] == 'Boolean':
+            if line['default_value'].__eq__("true"):
+                class_lines.append(f"{line['column_name']} = {line['data_type']}(default={True})")
+            elif line['default_value'].__eq__("false"):
+                class_lines.append(f"{line['column_name']} = {line['data_type']}(default={False})")
+        elif line['data_type'] == 'FloatField':
+            class_lines.append(f"{line['column_name']} = {line['data_type']}(default=float({line['default_value']}))")
+        elif not line['default_value']:
+            class_lines.append(f"{line['column_name']} = {line['data_type']}()")
         else:
-            if not line['default_value']:
-                class_lines.append(f"{line['column_name']} = {line['data_type']}()")
-            else:
-                class_lines.append(f"{line['column_name']} = {line['data_type']}(default={line['default_value']})")
+            class_lines.append(f"{line['column_name']} = {line['data_type']}(default={line['default_value']})")
 
     class_lines.append("")
     if is_dependency_analysis_mixin:
