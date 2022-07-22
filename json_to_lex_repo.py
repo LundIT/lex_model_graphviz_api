@@ -41,7 +41,7 @@ def class_to_lex_file(json, class_name, columns, settings, project_settings):
             class_lines.append(f"{line['column_name']} = {line['data_type']}(to={line['to']}, on_delete={line['on_delete']})")
         else:
             if not line['default_value']:
-                class_lines.append(f"{line['column_name']} = {line['data_type']}")
+                class_lines.append(f"{line['column_name']} = {line['data_type']}()")
             else:
                 class_lines.append(f"{line['column_name']} = {line['data_type']}(default={line['default_value']})")
 
