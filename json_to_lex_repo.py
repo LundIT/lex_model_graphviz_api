@@ -43,9 +43,9 @@ def class_to_lex_file(json, class_name, columns, settings, project_settings):
             class_lines.append(f"{line['column_name']} = {line['data_type']}(\"default={line['default_value']}\")")
         elif line['data_type'] == 'Boolean':
             if line['default_value'].__eq__("true"):
-                class_lines.append(f"{line['column_name']} = {line['data_type']}(default={True})")
+                class_lines.append(f"{line['column_name']} = {line['data_type']}(default=True)")
             elif line['default_value'].__eq__("false"):
-                class_lines.append(f"{line['column_name']} = {line['data_type']}(default={False})")
+                class_lines.append(f"{line['column_name']} = {line['data_type']}(default=False)")
         elif line['data_type'] == 'FloatField':
             class_lines.append(f"{line['column_name']} = {line['data_type']}(default=float({line['default_value']}))")
         elif not line['default_value']:
